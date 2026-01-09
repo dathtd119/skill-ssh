@@ -1,0 +1,59 @@
+{
+  "name": "ssh-manager-skill",
+  "version": "1.0.0",
+  "description": "AI assistant skill for SSH remote server management with configurable command safety patterns, real-time streaming, and automated testing. Compatible with Claude Code, ChatGPT, Gemini, and other LLM assistants.",
+  "type": "module",
+  "main": "lib/index.js",
+  "scripts": {
+    "setup": "bun install && cp .env.example .env && chmod 600 .env",
+    "list": "bun run scripts/core/list-servers.ts",
+    "exec": "bun run scripts/core/execute.ts",
+    "upload": "bun run scripts/core/upload.ts",
+    "download": "bun run scripts/core/download.ts",
+    "sync": "bun run scripts/core/sync.ts",
+    "sudo": "bun run scripts/advanced/execute-sudo.ts",
+    "health": "bun run scripts/monitoring/health-check.ts",
+    "backup": "bun run scripts/backup/backup-create.ts"
+  },
+  "keywords": [
+    "ssh",
+    "ai-assistant",
+    "llm-skill",
+    "claude-code",
+    "chatgpt",
+    "gemini",
+    "skill",
+    "remote-server",
+    "automation",
+    "devops",
+    "deployment",
+    "backup",
+    "monitoring",
+    "database",
+    "command-safety"
+  ],
+  "author": "Dat H. Tran <dathtd119@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dathtd119/skill-ssh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dathtd119/skill-ssh/issues"
+  },
+  "homepage": "https://github.com/dathtd119/skill-ssh#readme",
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "dotenv": "^16.4.5",
+    "ssh2": "^1.17.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  }
+}
